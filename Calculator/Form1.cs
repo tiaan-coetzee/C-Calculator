@@ -12,6 +12,7 @@ namespace Calculator
 {
     public partial class Form1 : Form
     {
+        //initialise variables
         string displayedNumber ="";
         int numberSelected;
         int btsCalcuation = 0;
@@ -88,7 +89,23 @@ namespace Calculator
 
         private void updateDisplay()
         {
+            //updates the display on the calculator
             tmpLabel.Text = displayedNumber;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                displayedNumber = displayedNumber.Remove(displayedNumber.Length-1, 1);
+                updateDisplay();
+            }
+
+            catch
+            { 
+            
+            }
+
         }
     }
 }

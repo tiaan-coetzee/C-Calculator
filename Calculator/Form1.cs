@@ -16,6 +16,8 @@ namespace Calculator
         string displayedNumber ="";
         int numberSelected;
         int btsCalcuation = 0;
+        int operationSelected = 0; // 0 = none, 1 = plus, 2 = minus, 3 = times, 4 = divide
+        bool shouldReset = false;
 
         public Form1()
         {
@@ -79,13 +81,76 @@ namespace Calculator
 
         private void btnPlus_Click(object sender, EventArgs e)
         {
-            btsCalcuation = btsCalcuation + numberSelected;
+            int.TryParse(displayedNumber, out numberSelected);
+            operationSelected = 1;
+            displayedNumber = "";
+            updateDisplay();
+        }
+
+        private void btnMinus_Click(object sender, EventArgs e)
+        {
+            int.TryParse(displayedNumber, out numberSelected);
+            operationSelected = 2;
+            displayedNumber = "";
+            updateDisplay();
+        }
+
+        private void btnTimes_Click(object sender, EventArgs e)
+        {
+            int.TryParse(displayedNumber, out numberSelected);
+            operationSelected = 3;
+            displayedNumber = "";
+            updateDisplay();
+        }
+
+        private void btnDivide_Click(object sender, EventArgs e)
+        {
+            int.TryParse(displayedNumber, out numberSelected);
+            operationSelected = 4;
+            displayedNumber = "";
+            updateDisplay();
         }
 
         private void btnEquals_Click(object sender, EventArgs e)
         {
+            shouldReset = true;
+            int calculatedNumber = 0;
 
+            switch (operationSelected)
+            {
+                case 0:
+                    MessageBox.Show("No operation selected");
+                    shouldReset = false;
+                        break;
+
+                case 1:
+                    calculatedNumber = int.Parse(displayedNumber) + numberSelected;
+                    displayedNumber = calculatedNumber.ToString();
+                    updateDisplay();
+                        break;
+
+                case 2:
+                    calculatedNumber = numberSelected - int.Parse(displayedNumber);
+                    displayedNumber = calculatedNumber.ToString();
+                    updateDisplay();
+                    break;
+
+                case 3:
+                    calculatedNumber = numberSelected * int.Parse(displayedNumber);
+                    displayedNumber = calculatedNumber.ToString();
+                    updateDisplay();
+                    break;
+
+                case 4:
+                    calculatedNumber = numberSelected / int.Parse(displayedNumber);
+                    displayedNumber = calculatedNumber.ToString();
+                    updateDisplay();
+                    break;
+            }
+            operationSelected = 0;
         }
+
+
 
         private void updateDisplay()
         {
@@ -93,19 +158,24 @@ namespace Calculator
             tmpLabel.Text = displayedNumber;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnBackSpace_Click(object sender, EventArgs e)
         {
             try
             {
-                displayedNumber = displayedNumber.Remove(displayedNumber.Length-1, 1);
+                displayedNumber = displayedNumber.Remove(displayedNumber.Length - 1, 1);
+
+                if (shouldReset)
+                {
+                    displayedNumber = "";
+                    shouldReset = false;
+                }
                 updateDisplay();
             }
 
             catch
-            { 
-            
-            }
+            {
 
+            }
         }
     }
 }

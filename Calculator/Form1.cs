@@ -14,8 +14,7 @@ namespace Calculator
     {
         //initialise variables
         string displayedNumber ="";
-        int numberSelected;
-        int btsCalcuation = 0;
+        decimal numberSelected;
         int operationSelected = 0; // 0 = none, 1 = plus, 2 = minus, 3 = times, 4 = divide
         bool shouldReset = false;
 
@@ -26,95 +25,87 @@ namespace Calculator
 
         private void btn1_Click(object sender, EventArgs e)
         {
-            displayedNumber += "1";
-            updateDisplay();
+            buttonPressed(1);
         }
 
         private void btn2_Click(object sender, EventArgs e)
         {
-            displayedNumber += "2";
-            updateDisplay();
+            buttonPressed(2);
         }
 
         private void btn3_Click(object sender, EventArgs e)
         {
-            displayedNumber += "3";
-            updateDisplay();
+            buttonPressed(3);
         }
 
         private void btn4_Click(object sender, EventArgs e)
         {
-            displayedNumber += "4";
-            updateDisplay();
+            buttonPressed(4);
         }
 
         private void btn5_Click(object sender, EventArgs e)
         {
-            displayedNumber += "5";
-            updateDisplay();
+            buttonPressed(5);
         }
 
         private void btn6_Click(object sender, EventArgs e)
         {
-            displayedNumber += "6";
-            updateDisplay();
+            buttonPressed(6);
         }
 
         private void btn7_Click(object sender, EventArgs e)
         {
-            displayedNumber += "7";
-            updateDisplay();
+            buttonPressed(7);
         }
 
         private void btn8_Click(object sender, EventArgs e)
         {
-            displayedNumber += "8";
-            updateDisplay();
+            buttonPressed(8);
         }
 
         private void btn9_Click(object sender, EventArgs e)
         {
-            displayedNumber += "9";
-            updateDisplay();
+            buttonPressed(9);
+        }
 
+        private void btn0_Click(object sender, EventArgs e)
+        {
+            buttonPressed(0);
+        }
+        private void btnDecimal_Click(object sender, EventArgs e)
+        {
+            buttonPressed(99);
+        }
+        private void btnPosNeg_Click(object sender, EventArgs e)
+        {
+            buttonPressed(77);
         }
 
         private void btnPlus_Click(object sender, EventArgs e)
         {
-            int.TryParse(displayedNumber, out numberSelected);
-            operationSelected = 1;
-            displayedNumber = "";
-            updateDisplay();
+            operationToBePerformed(1);
         }
 
         private void btnMinus_Click(object sender, EventArgs e)
         {
-            int.TryParse(displayedNumber, out numberSelected);
-            operationSelected = 2;
-            displayedNumber = "";
-            updateDisplay();
+            operationToBePerformed(2);
         }
 
         private void btnTimes_Click(object sender, EventArgs e)
         {
-            int.TryParse(displayedNumber, out numberSelected);
-            operationSelected = 3;
-            displayedNumber = "";
-            updateDisplay();
+            operationToBePerformed(3);
         }
 
         private void btnDivide_Click(object sender, EventArgs e)
         {
-            int.TryParse(displayedNumber, out numberSelected);
-            operationSelected = 4;
-            displayedNumber = "";
-            updateDisplay();
+            operationToBePerformed(4);
         }
 
         private void btnEquals_Click(object sender, EventArgs e)
         {
             shouldReset = true;
-            int calculatedNumber = 0;
+            decimal calculatedNumber = 0;
+            lblOperation.Text = "";
 
             switch (operationSelected)
             {
@@ -124,26 +115,26 @@ namespace Calculator
                         break;
 
                 case 1:
-                    calculatedNumber = int.Parse(displayedNumber) + numberSelected;
-                    displayedNumber = calculatedNumber.ToString();
+                    calculatedNumber = (decimal)numberSelected + decimal.Parse(displayedNumber);
+                    displayedNumber = calculatedNumber.ToString("0.########");
                     updateDisplay();
                         break;
 
                 case 2:
-                    calculatedNumber = numberSelected - int.Parse(displayedNumber);
-                    displayedNumber = calculatedNumber.ToString();
+                    calculatedNumber = (decimal)numberSelected - decimal.Parse(displayedNumber);
+                    displayedNumber = calculatedNumber.ToString("0.########");
                     updateDisplay();
                     break;
 
                 case 3:
-                    calculatedNumber = numberSelected * int.Parse(displayedNumber);
-                    displayedNumber = calculatedNumber.ToString();
+                    calculatedNumber = numberSelected * decimal.Parse(displayedNumber);
+                    displayedNumber = calculatedNumber.ToString("0.########");
                     updateDisplay();
                     break;
 
                 case 4:
-                    calculatedNumber = numberSelected / int.Parse(displayedNumber);
-                    displayedNumber = calculatedNumber.ToString();
+                    calculatedNumber = numberSelected / decimal.Parse(displayedNumber);
+                    displayedNumber = calculatedNumber.ToString("0.########");
                     updateDisplay();
                     break;
             }
@@ -176,6 +167,80 @@ namespace Calculator
             {
 
             }
+
+        }
+    
+        private void operationToBePerformed(int  number)
+        {
+            shouldReset = false;
+            decimal.TryParse(displayedNumber, out numberSelected);
+            operationSelected = number;
+            displayedNumber = "";
+            updateDisplay();
+
+            switch(number)
+            {
+                case 1:
+                    lblOperation.Text = "+";
+                    break;
+                case 2:
+                    lblOperation.Text = "-";
+                    break;
+                case 3:
+                    lblOperation.Text = "x";
+                    break;
+                case 4:
+                    lblOperation.Text = "÷";
+                    break;
+            }
+        }
+
+        private void buttonPressed(int number)
+        {
+            if (shouldReset)
+            {
+                displayedNumber = "";
+                updateDisplay();
+            }
+
+            shouldReset = false;
+
+            if (displayedNumber.Length < 8)
+            {
+                if (number < 10)
+                {
+                    displayedNumber += number;
+                }
+
+                else if (number == 99 && displayedNumber != "" && !displayedNumber.Contains("."))
+                {
+                    displayedNumber += ".";
+                }
+
+                else if (displayedNumber == "" && number == 99)
+                {
+                    displayedNumber += "0.";
+                }
+            }
+
+            if (displayedNumber != "" && number == 77)
+            {
+                if (!displayedNumber.Contains("-"))
+                {
+                    displayedNumber = "-" + displayedNumber;
+                }
+                else
+                {
+                    displayedNumber = displayedNumber.Remove(0, 1);
+                }
+            }
+
+            updateDisplay();
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

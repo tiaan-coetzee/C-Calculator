@@ -21,6 +21,12 @@ namespace Calculator
         public Form1()
         {
             InitializeComponent();
+            this.Shown += new EventHandler(Form1_Shown);
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            panel1.Focus();
         }
 
         private void btn1_Click(object sender, EventArgs e)
@@ -103,42 +109,45 @@ namespace Calculator
 
         private void btnEquals_Click(object sender, EventArgs e)
         {
-            shouldReset = true;
-            decimal calculatedNumber = 0;
-            lblOperation.Text = "";
-
-            switch (operationSelected)
+            if (lblOperation.Text != "" && (operationSelected!=4 && int.Parse(displayedNumber)!=0))
             {
-                case 0:
-                    MessageBox.Show("No operation selected");
-                    shouldReset = false;
+                shouldReset = true;
+                decimal calculatedNumber = 0;
+                lblOperation.Text = "=";
+                lblOperatingNr.Text = "";
+
+                switch (operationSelected)
+                {
+                    case 0:
+                        shouldReset = false;
                         break;
 
-                case 1:
-                    calculatedNumber = (decimal)numberSelected + decimal.Parse(displayedNumber);
-                    displayedNumber = calculatedNumber.ToString("0.########");
-                    updateDisplay();
+                    case 1:
+                        calculatedNumber = (decimal)numberSelected + decimal.Parse(displayedNumber);
+                        displayedNumber = calculatedNumber.ToString("0.########");
+                        updateDisplay();
                         break;
 
-                case 2:
-                    calculatedNumber = (decimal)numberSelected - decimal.Parse(displayedNumber);
-                    displayedNumber = calculatedNumber.ToString("0.########");
-                    updateDisplay();
-                    break;
+                    case 2:
+                        calculatedNumber = (decimal)numberSelected - decimal.Parse(displayedNumber);
+                        displayedNumber = calculatedNumber.ToString("0.########");
+                        updateDisplay();
+                        break;
 
-                case 3:
-                    calculatedNumber = numberSelected * decimal.Parse(displayedNumber);
-                    displayedNumber = calculatedNumber.ToString("0.########");
-                    updateDisplay();
-                    break;
+                    case 3:
+                        calculatedNumber = numberSelected * decimal.Parse(displayedNumber);
+                        displayedNumber = calculatedNumber.ToString("0.########");
+                        updateDisplay();
+                        break;
 
-                case 4:
-                    calculatedNumber = numberSelected / decimal.Parse(displayedNumber);
-                    displayedNumber = calculatedNumber.ToString("0.########");
-                    updateDisplay();
-                    break;
+                    case 4:
+                        calculatedNumber = numberSelected / decimal.Parse(displayedNumber);
+                        displayedNumber = calculatedNumber.ToString("0.########");
+                        updateDisplay();
+                        break;
+                }
+                operationSelected = 0;
             }
-            operationSelected = 0;
         }
 
 
@@ -159,6 +168,7 @@ namespace Calculator
                 {
                     displayedNumber = "";
                     shouldReset = false;
+                    lblOperation.Text = "";
                 }
                 updateDisplay();
             }
@@ -175,8 +185,10 @@ namespace Calculator
             shouldReset = false;
             decimal.TryParse(displayedNumber, out numberSelected);
             operationSelected = number;
+            lblOperatingNr.Text = displayedNumber;
             displayedNumber = "";
             updateDisplay();
+
 
             switch(number)
             {
@@ -200,6 +212,7 @@ namespace Calculator
             if (shouldReset)
             {
                 displayedNumber = "";
+                lblOperation.Text = "";
                 updateDisplay();
             }
 
@@ -238,9 +251,26 @@ namespace Calculator
             updateDisplay();
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form1_HelpButtonClicked(object sender, CancelEventArgs e)
+        {
+            MessageBox.Show("Note:\r\nThis calculator saves all calculations in decimal format for high precision. However, it only supports up to 8 digits for user input.");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            displayedNumber = "";
+            lblOperation.Text = "";
+            updateDisplay();
         }
     }
 }
